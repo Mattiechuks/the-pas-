@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 from streamlit_webrtc import webrtc_streamer
 import av
+import asyncio
 
 
 st.set_page_config(page_title='Registration Form')
@@ -21,17 +22,24 @@ role = st.selectbox(label='Select your Role',options=('Student',
 
 
 # step-2: Collect facial embedding of that person
-def video_callback_func(frame):
+async def video_callback_func(frame):
     img = frame.to_ndarray(format='bgr24') # 3d array bgr
     reg_img, embedding = registration_form.get_embedding(img)
     # two step process
     # 1st step save data into local computer txt
     if embedding is not None:
-        with open('face_embedding.txt',mode='ab') as f:
-            np.savetxt(f,embedding)
+        asyncio.create_task(save_embedding_in_redis(embedding))
+        
     
     return av.VideoFrame.from_ndarray(reg_img,format='bgr24')
-
+  
+async def save_embedding_in_redis(embedding):
+    try:
+        with open('face_embedding.txt',mode='ab') as f:
+            np.savetxt(f,embedding)
+        pass
+    except Exception as e:
+        print(f"Error saving to Redis: {e}")
 webrtc_streamer(key='registration',video_frame_callback=video_callback_func)
 
 
