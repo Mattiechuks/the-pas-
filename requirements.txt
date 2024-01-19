@@ -10,3 +10,4 @@ pillow
 insightface
 onnxruntime-gpu
 streamlit-webrtc
+av
