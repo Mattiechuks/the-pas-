@@ -25,6 +25,10 @@ role = st.selectbox(label='Select your Role',options=('Student',
 def video_callback_func(frame):
     img = frame.to_ndarray(format='bgr24') # 3d array bgr
     reg_img, embedding = registration_form.get_embedding(img)
+
+    # Display the camera stream in a separate OpenCv window
+    cv2.imshow("Camera Stream", reg_img)
+    cv2.waitKey(1)  # This is needed fot the window to update properly
     # two step process
     # 1st step save data into local computer txt
     if embedding is not None:
