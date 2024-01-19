@@ -11,3 +11,4 @@ insightface
 onnxruntime-gpu
 streamlit-webrtc
 av
+scikit-learn
