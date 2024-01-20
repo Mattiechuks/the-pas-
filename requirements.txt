@@ -13,3 +13,4 @@ streamlit-webrtc
 av
 scikit-learn
 black
+watchdog
