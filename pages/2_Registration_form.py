@@ -3,7 +3,7 @@ from Home import face_rec
 import base64
 import cv2
 import numpy as np
-from streamlit_webrtc import webrtc_streamer
+from streamlit_webrtc import webrtc_streamer, RTCConfiguration
 import av
 
 
@@ -32,7 +32,11 @@ def video_callback_func(self, frame):
         
     return av.VideoFrame.from_ndarray(reg_img,format='bgr24')
   
-webrtc_streamer(key='registration',video_frame_callback=video_callback_func)
+webrtc_streamer(key='registration',video_frame_callback=video_callback_func,
+               rtc_configuration=RTCConfiguration(
+                 {"iceServers": [{"urls": ["stun.l.google.com:19302"]}]}
+               )
+    )
 
 
 # step-3: save the data in redis database
