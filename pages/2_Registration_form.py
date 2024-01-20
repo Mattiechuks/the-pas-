@@ -5,7 +5,6 @@ import cv2
 import numpy as np
 from streamlit_webrtc import webrtc_streamer
 import av
-import asyncio
 
 
 st.set_page_config(page_title='Registration Form')
