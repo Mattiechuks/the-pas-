@@ -35,7 +35,6 @@ def video_callback_func(self, frame):
 webrtc_streamer(key='registration',video_frame_callback=video_callback_func,
                rtc_configuration=RTCConfiguration(
                  {"iceServers": [{"urls": [
-                                            "stun.voipbuster.com",
                                             "stun.voipstunt.com"
                                           ]}]}
                )
