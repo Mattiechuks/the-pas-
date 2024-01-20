@@ -12,3 +12,4 @@ onnxruntime-gpu
 streamlit-webrtc
 av
 scikit-learn
+black
