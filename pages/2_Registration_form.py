@@ -34,7 +34,17 @@ def video_callback_func(self, frame):
   
 webrtc_streamer(key='registration',video_frame_callback=video_callback_func,
                rtc_configuration=RTCConfiguration(
-                 {"iceServers": [{"urls": ["stun1.l.google.com:19302"]}]}
+                 {"iceServers": [{"urls": [
+                                            "stun.l.google.com:19302",
+                                            "stun1.l.google.com:19302",
+                                            "stun2.l.google.com:19302",
+                                            "stun3.l.google.com:19302",
+                                            "stun4.l.google.com:19302",
+                                            "stun.ekiga.net",
+                                            "stun.stunprotocol.org:3478",
+                                            "stun.voipbuster.com",
+                                            "stun.voipstunt.com"
+                                          ]}]}
                )
     )
 
