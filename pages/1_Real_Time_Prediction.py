@@ -4,6 +4,7 @@ from Home import face_rec
 from streamlit_webrtc import webrtc_streamer
 import av
 import time
+import threading
 
 st.set_page_config(page_title='Predictions')
 st.subheader('Real-Time Attendance System')
@@ -35,15 +36,24 @@ def video_frame_callback(frame):
     timenow = time.time()
     difftime = timenow - setTime
     if difftime >= waitTime:
-        realtimepred.saveLogs_redis()
         setTime = time.time() # reset time        
         print('Save Data to redis database')
     
 
     return av.VideoFrame.from_ndarray(pred_img, format="bgr24")
 
+# Function to save logs periodically
+def save_logs_periodically(realtimepred):
+    while True:
+        time.sleep(60)  # Save logs every 60 seconds
+        realtimepred.saveLogs_redis()
+
+# Start the saving logs thread
+save_logs_thread = threading.Thread(target=save_logs_periodically, args=(realtimepred,))
+save_logs_thread.start()
 
 webrtc_streamer(key="realtimePrediction", video_frame_callback=video_frame_callback)
+
 def get_base64_of_bin_file(png_file):
     with open(png_file, "rb") as f:
         data = f.read()
