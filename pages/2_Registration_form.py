@@ -3,8 +3,10 @@ from Home import face_rec
 import base64
 import cv2
 import numpy as np
-from streamlit_webrtc import WebRtcMode, webrtc_streamer
+from streamlit_webrtc import webrtc_streamer
+import time
 import av
+import threading
 
 
 st.set_page_config(page_title='Registration Form')
@@ -19,19 +21,37 @@ person_name = st.text_input(label='Name',placeholder='First & Last Name')
 role = st.selectbox(label='Select your Role',options=('Student',
                                                       'Teacher'))
 
-
 # step-2: Collect facial embedding of that person
-def video_callback_func(self, frame):
+def video_callback_func(frame):
     img = frame.to_ndarray(format='bgr24') # 3d array bgr
+
     reg_img, embedding = registration_form.get_embedding(img)
     # two step process
     # 1st step save data into local computer txt
     if embedding is not None:
         with open('face_embedding.txt',mode='ab') as f:
             np.savetxt(f,embedding)
-        
+    
     return av.VideoFrame.from_ndarray(reg_img,format='bgr24')
-  
+
+
+# Function to save data periodically
+def save_data_periodically(registration_form, person_name, role):
+    while True:
+        return_val = registration_form.save_data_in_redis_db(person_name,role)
+        if return_val == True:
+            st.success(f"{person_name} registered sucessfully")
+        elif return_val == 'name_false':
+            st.error('Please enter the name: Name cannot be empty or spaces')
+            
+        elif return_val == 'file_false':
+            st.error('face_embedding.txt is not found. Please refresh the page and execute again.')
+
+# Start the saving data thread
+save_data_thread = threading.Thread(target=save_data_periodically, args=(registration_form, person_name, role))
+save_data_thread.start()
+
+#Start the video Streaming
 webrtc_streamer(key='registration',video_frame_callback=video_callback_func)
 
 
