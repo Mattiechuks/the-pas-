@@ -22,10 +22,26 @@ waitTime = 30 # time in sec
 setTime = time.time()
 realtimepred = face_rec.RealTimePred() # real time prediction class
 
+
+# Function to create a placeholder frame
+def create_placeholder_frame(width, height):
+    # You can customize the placeholder image or message
+    placeholder_image = np.zeros((height, width, 3), dtype=np.uint8)
+    placeholder_image[:] = (255, 255, 255)  # White color as a placeholder
+    return placeholder_image
+
 # Real Time Prediction
 # streamlit webrtc
 # callback function
 def video_frame_callback(frame):
+    if frame is None:
+        # Create a placeholder frame with the desired width and height
+        width, height = 640, 480  # Adjust these values based on your requirements
+        placeholder_frame = create_placeholder_frame(width, height)
+        st.image(placeholder_frame, channels="BGR", use_column_width=True, caption="No video feed available")
+        return None
+
+    
     img = frame.to_ndarray(format="bgr24") # 3 dimension numpy array
     # operation that you can perform on the array
     pred_img = realtimepred.face_prediction(img,redis_face_db,
