@@ -3,7 +3,7 @@ numpy
 pandas
 matplotlib
 scipy
-opencv-python
+opencv-python-headless
 streamlit
 pillow
 insightface
