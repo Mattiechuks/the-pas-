@@ -80,6 +80,14 @@ def ml_search_algorithm(dataframe, feature_column, test_vector,
     return person_name, person_role
 
 
+# Function to create a placeholder frame
+def create_placeholder_frame(width, height):
+    # You can customize the placeholder image or message
+    placeholder_image = np.zeros((height, width, 3), dtype=np.uint8)
+    placeholder_image[:] = (255, 255, 255)  # White color as a placeholder
+    return placeholder_image
+
+
 # Real Time Prediction
 # we need to save logs for every 1 mins
 class RealTimePred:
@@ -114,6 +122,13 @@ class RealTimePred:
                         name_role=['Name', 'Role'], thresh=0.5):
         # step-1: find the time
         current_time = str(datetime.now())
+                          
+        if test_image is None:
+            # Display a placeholder frame if the incoming frame is None
+            width, height = 640, 480  # Adjust these values based on your requirements
+            placeholder_frame = create_placeholder_frame(width, height)
+            st.image(placeholder_frame, channels="BGR", use_column_width=True, caption="No video feed available")
+            return None
 
         # step-1: take the test image and apply to insight face
         results = faceapp.get(test_image)
