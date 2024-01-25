@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import cv2
+import cv2 as cv2
 
 import redis
 
